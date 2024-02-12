@@ -1,0 +1,22 @@
+config:
+  backup: true
+  create: true
+  dotpath: dotfiles
+dotfiles:
+  f_zshrc:
+    src: zshrc
+    dst: ~/.zshrc
+    chmod: '644'
+  d_tmux:
+    src: config/tmux
+    dst: ~/.config/tmux
+  d_nvim:
+    src: config/nvim
+    dst: ~/.config/nvim
+    chmod: '755'
+profiles:
+  joshua-x360:
+    dotfiles:
+    - f_zshrc
+    - d_tmux
+    - d_nvim
