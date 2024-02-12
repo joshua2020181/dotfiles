@@ -7,16 +7,22 @@ dotfiles:
     src: zshrc
     dst: ~/.zshrc
     chmod: '644'
-  d_tmux:
-    src: config/tmux
-    dst: ~/.config/tmux
-  d_nvim:
-    src: config/nvim
-    dst: ~/.config/nvim
+  d_lua:
+    src: config/nvim/lua
+    dst: ~/.config/nvim/lua
     chmod: '755'
+  f_init.lua:
+    src: config/nvim/init.lua
+    dst: ~/.config/nvim/init.lua
+    chmod: '644'
+  f_tmux.conf:
+    src: config/tmux/tmux.conf
+    dst: ~/.config/tmux/tmux.conf
+    chmod: '644'
 profiles:
   joshua-x360:
     dotfiles:
     - f_zshrc
-    - d_tmux
-    - d_nvim
+    - d_lua
+    - f_init.lua
+    - f_tmux.conf
