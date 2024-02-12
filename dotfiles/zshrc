@@ -145,6 +145,8 @@ alias gcm="git checkout master && git pull"
 alias gpp="git pull && git push"
 alias ggraph="git log --graph --oneline --decorate --all"
 alias glog="git log --oneline --decorate"
+alias gdiff="git diff"
+alias gcam="git commit -am"
 
 alias adm="arc diff master"
 
