@@ -14,7 +14,7 @@ dotfiles:
   f_init.lua:
     src: config/nvim/init.lua
     dst: ~/.config/nvim/init.lua
-    chmod: '644'
+    chmod: '664'
   f_tmux.conf:
     src: config/tmux/tmux.conf
     dst: ~/.config/tmux/tmux.conf

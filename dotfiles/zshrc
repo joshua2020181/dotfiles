@@ -159,3 +159,7 @@ source /opt/ros/noetic/setup.zsh
 source $HOME/.cargo/env
 
 alias dotdrop="/home/joshua/dotfiles/dotdrop.sh --cfg=/home/joshua/dotfiles/config.yaml"
+
+eval "$(zoxide init --cmd cd zsh)"
+
+
