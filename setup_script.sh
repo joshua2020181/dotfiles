@@ -67,7 +67,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 # install nerd font https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip
 # JetBrainsMonoNerdFont-Medium.ttf
 
-# install kde: sudo apt install kde-standard
+# install kde: sudo apt install kubuntu-desktop
 
 
 
