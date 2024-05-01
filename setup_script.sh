@@ -42,8 +42,6 @@ tldr --update
 # cp .bashrc ~/.bashrc
 # source ~/.bashrc
 
-git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install
 
 # node mostly for gh copilot
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - &&\
@@ -63,6 +61,10 @@ chsh -s $(which zsh)
 
 # omz
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install
+
 
 # install nerd font https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip
 # JetBrainsMonoNerdFont-Medium.ttf
