@@ -26,3 +26,9 @@ profiles:
     - d_lua
     - f_init.lua
     - f_tmux.conf
+  joshua-ThinkPad-P14s-Gen-4:
+    dotfiles:
+    - f_zshrc
+    - d_lua
+    - f_init.lua
+    - f_tmux.conf

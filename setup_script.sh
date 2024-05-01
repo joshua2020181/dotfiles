@@ -20,7 +20,9 @@ setxkbmap -option 'ctrl:nocaps'
 xcape -e 'Control_L=Escape'  # caps lock is escape when tapped
 # maybe this honestly i forgot: https://gist.github.com/tanyuan/55bca522bf50363ae4573d4bdcf06e2e
 
-sudo apt install -y xsel xcape zoxide tldr
+curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+
+sudo apt install -y xsel xcape tldr
 tldr --update
 
 # install win32yank for clipboard support in neovim
