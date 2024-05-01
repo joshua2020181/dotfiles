@@ -6,6 +6,10 @@ wget https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
 chmod u+x nvim.appimage
 sudo mv nvim.appimage /usr/local/bin/nvim
 
+# https://github.com/AppImage/AppImageKit/wiki/FUSE
+sudo add-apt-repository universe
+sudo apt install libfuse2
+
 # install nvchad
 git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
 
@@ -16,8 +20,8 @@ setxkbmap -option 'ctrl:nocaps'
 xcape -e 'Control_L=Escape'  # caps lock is escape when tapped
 # maybe this honestly i forgot: https://gist.github.com/tanyuan/55bca522bf50363ae4573d4bdcf06e2e
 
-sudo apt install xsel  # for clipboard support in tmux
-
+sudo apt install -y xsel xcape zoxide tldr
+tldr --update
 
 # install win32yank for clipboard support in neovim
 # curl -sLo/tmp/win32yank.zip https://github.com/equalsraf/win32yank/releases/download/v0.0.4/win32yank-x64.zip
@@ -43,7 +47,25 @@ git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - &&\
 sudo apt-get install -y nodejs
 
+pip3 install --user -r dotdrop/requirements.txt
+./dotdrop/bootstrap.sh
+
+# install python 3.8
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt-get update
+sudo apt-get install python3.8 python3.8-venv
+
 # install zsh
-sudo apt install zsh
+sudo apt install -y zsh
 chsh -s $(which zsh)
+
+# omz
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# install nerd font https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip
+# JetBrainsMonoNerdFont-Medium.ttf
+
+# install kde: sudo apt install kde-standard
+
+
 

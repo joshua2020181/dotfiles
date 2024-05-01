@@ -154,9 +154,9 @@ alias sshrm="ssh-keygen -f /home/joshua/.ssh/known_hosts -R "
 
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-source /opt/ros/noetic/setup.zsh
+source /opt/ros/noetic/setup.zsh || true
 
-source $HOME/.cargo/env
+source $HOME/.cargo/env || true
 
 alias dotdrop="/home/joshua/dotfiles/dotdrop.sh --cfg=/home/joshua/dotfiles/config.yaml"
 
