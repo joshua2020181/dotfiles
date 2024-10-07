@@ -4,24 +4,27 @@ local capabilities = require("plugins.configs.lspconfig").capabilities
 local lspconfig = require "lspconfig"
 
 capabilities.textDocument.foldingRange = {
-    dynamicRegistration = false,
-    lineFoldingOnly = true
+  dynamicRegistration = false,
+  lineFoldingOnly = true
 }
 
 
 lspconfig.pyright.setup {
   on_attach = on_attach,
   capabilities = capabilities,
+  root_dir = lspconfig.util.root_pattern("pyrightconfig.json"),
   settings = {
+    pyright = {
+      autoImportCompletion = true,
+    },
     python = {
       analysis = {
         autoSearchPaths = true,
         useLibraryCodeForTypes = true,
+        diagnosticSeverityOverrides = {
+          reportAttributeAccessIssue = "error",
+        },
       },
-      -- configFiles = {
-      --   "/home/joshua/.config/personal/pyrightconfig.json",
-      --   -- "/home/joshua/kiwi/.pylintrc",
-      -- }
     },
   },
 }
@@ -36,6 +39,17 @@ lspconfig.tsserver.setup {
   }
 }
 
+lspconfig.clangd.setup {
+  on_attach = on_attach,
+  capabilities = vim.tbl_extend("keep", capabilities, { offsetEncoding = { "utf-16" } }),
+  filetypes = { "c", "cpp", "objc", "objcpp" },
+  cmd = {
+    "clangd",
+    "--offset-encoding=utf-16",
+  }
+}
+
+
 --[[ local servers = { "pyright" }
 
 for _, lsp in ipairs(servers) do
@@ -44,3 +58,20 @@ for _, lsp in ipairs(servers) do
     capabilities = capabilities,
   }
 end ]]
+
+
+vim.g.rustaceanvim = {
+  tools = {
+    -- ...
+  },
+  server = {
+    on_attach = function(client, bufnr)
+      on_attach(client, bufnr)
+    end,
+    default_settings = {
+      -- rust-analyzer language server configuration
+      ['rust-analyzer'] = {
+      },
+    },
+  },
+}

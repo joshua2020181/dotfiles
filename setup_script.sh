@@ -53,7 +53,7 @@ pip3 install --user -r dotdrop/requirements.txt
 # install python 3.8
 sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt-get update
-sudo apt-get install python3.8 python3.8-venv
+sudo apt-get install python3.8 python3.8-venv python3.8-dev
 
 # install zsh
 sudo apt install -y zsh
@@ -64,6 +64,8 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install
+
+sudo apt install -y ripgrep
 
 
 # install nerd font https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip

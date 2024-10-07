@@ -70,7 +70,12 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(
+  git
+  zsh-syntax-highlighting
+  zsh-autosuggestions
+  you-should-use
+)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -113,9 +118,16 @@ fi
 
 export PATH="$PATH:$HOME/.local/bin/"
 
+export PATH="$PATH:/opt/nvim-linux64/bin"
+
 export EDITOR="nvim"
 export PATH="$PATH:$HOME/kiwi/kiwi_toolkit/"
 export PATH="$PATH:$HOME/s/"
+
+source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# Bind Alt + Enter to accept zsh-autosuggestions
+bindkey '\e\r' autosuggest-accept
 
 # python stuff
 alias nbrc="nano ~/.bashrc"
@@ -127,34 +139,64 @@ alias tmux="tmux -f ~/.config/tmux/tmux.conf"
 
 alias edh="export DOCKER_HOST=\"192.168.2.100\" && echo DOCKER_HOST: \$DOCKER_HOST"
 alias uedh="export DOCKER_HOST=\"\" && echo DOCKER_HOST: \$DOCKER_HOST"
-alias edha="export DOCKER_HOST=\"192.168.2.151\" && echo DOCKER_HOST: \$DOCKER_HOST"
+alias edhp="export DOCKER_HOST=\"192.168.2.108\" && echo DOCKER_HOST: \$DOCKER_HOST"
 alias tk="toolkit"
-alias tkb="toolkit build"
+alias tkb="DOCKER_HOST='' toolkit build"
 alias tkc="toolkit copy"
 alias tkr="toolkit run"
+alias tkrs="toolkit run sc1"
 alias tkt="toolkit test"
+alias tktu="toolkit test unit --quiet"
 alias tkd="toolkit data"
-alias tkbr="toolkit build release_moe && toolkit run"
+alias tkbr="toolkit build && toolkit run"
+alias tkbra="toolkit build && toolkit run --autostart moe.desktop.1:desktop"
+alias tkbrs="toolkit build && toolkit run sc1"
+alias tkbrsa="toolkit build && toolkit run sc1 && curl http://localhost/activity-switcher -H \"Content-Type: application/json\" --data '{\"activity\": \"autostart_desktop\"}'"
+alias tr="toolkit run"
+alias trs="toolkit run sc1"
+alias tb="toolkit build"
+alias tbr="toolkit build && toolkit run"
 alias dlf="docker logs -f"
 
+alias gs="git status"
+alias ga="git add"
+alias gc="git commit"
+alias gp="git push"
+alias gpl="git pull"
+alias gco="git checkout"
+alias gcob="git checkout -b"
+alias gcm="git commit -m"
 alias gitb="git branch"
 alias gita="git add"
+alias gd="git diff"
 alias gits="git diff && git status"
 alias gitc="git checkout"
 alias gcm="git checkout master && git pull"
 alias gpp="git pull && git push"
 alias ggraph="git log --graph --oneline --decorate --all"
 alias glog="git log --oneline --decorate"
+alias gls="git log --oneline --decorate --stat"
 alias gdiff="git diff"
 alias gcam="git commit -am"
+alias gpf="git push --force-with-lease"
+
+alias dps="docker ps"
 
 alias adm="arc diff master"
 
 alias sshrm="ssh-keygen -f /home/joshua/.ssh/known_hosts -R "
 
+unalias gl 2> /dev/null
+gl() {
+  git pull
+  if [[ -n $(git status --porcelain) ]]; then
+    echo "Uncommitted changes!"
+    echo $(git status --porcelain)
+  fi
+}
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-source /opt/ros/noetic/setup.zsh || true
+# source /opt/ros/noetic/setup.zsh || true
 
 source $HOME/.cargo/env || true
 
@@ -162,4 +204,23 @@ alias dotdrop="/home/joshua/dotfiles/dotdrop.sh --cfg=/home/joshua/dotfiles/conf
 
 eval "$(zoxide init --cmd cd zsh)"
 
+alias svenv="source ~/kiwi/venv/kiwi/bin/activate"
+alias kiwi="cd ~/kiwi && svenv"
+alias nvkiwi="cd ~/kiwi && svenv && nvim"
+
+# ssh-add ~/.ssh/personal_id_ed25519
+alias export_px4_home="export PX4_HOME_ALT=0 && export PX4_HOME_LON=-71.51873173774923 && export PX4_HOME_LAT=42.462421357750316"
+alias hitl="source ~/kiwi/venv/kiwi/bin/activate && export_px4_home && ~/kiwi/offline_utils/run_gazebo.sh"
+alias guardian_app="DOCKER_HOST=\"\" docker start guardian_guardian_app_1"
+
+make_px4_sitl() {
+  local target="${1:-gazebo_iris_irlock__baylands}"
+  cd ~/px4
+  source .venv/bin/activate
+  sudo mv /usr/local/bin/protoc /usr/local/bin/protoc-tmp
+  DONT_RUN=1 make px4_sitl "$target"
+  sudo mv /usr/local/bin/protoc-tmp /usr/local/bin/protoc
+}
+
+eval $(thefuck --alias)
 
