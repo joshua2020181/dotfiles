@@ -40,7 +40,12 @@ lspconfig.tsserver.setup {
 }
 
 lspconfig.clangd.setup {
-  on_attach = on_attach,
+  on_attach = function(client, bufnr)
+    on_attach(client, bufnr)
+    if client.server_capabilities.documentSymbolProvider then
+      require("nvim-navic").attach(client, bufnr)
+    end
+  end,
   capabilities = vim.tbl_extend("keep", capabilities, { offsetEncoding = { "utf-16" } }),
   filetypes = { "c", "cpp", "objc", "objcpp" },
   cmd = {

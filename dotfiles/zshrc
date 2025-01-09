@@ -145,6 +145,7 @@ alias tkb="DOCKER_HOST='' toolkit build"
 alias tkc="toolkit copy"
 alias tkr="toolkit run"
 alias tkrs="toolkit run sc1"
+alias tkrsa="toolkit run sc1 && curl http://localhost/activity-switcher -H \"Content-Type: application/json\" --data '{\"activity\": \"autostart_desktop\"}'"
 alias tkt="toolkit test"
 alias tktu="toolkit test unit --quiet"
 alias tkd="toolkit data"
@@ -179,6 +180,8 @@ alias gls="git log --oneline --decorate --stat"
 alias gdiff="git diff"
 alias gcam="git commit -am"
 alias gpf="git push --force-with-lease"
+
+alias kill-gazebo="pkill -f gazebo; pkill -f gzserver; pkill -f gzclient"
 
 alias dps="docker ps"
 

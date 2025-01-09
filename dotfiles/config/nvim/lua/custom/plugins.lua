@@ -204,6 +204,9 @@ local plugins = {
     "smbl64/vim-black-macchiato",
     lazy = false,
   },
+  {
+    "SmiteshP/nvim-navic",
+  },
 }
 
 return plugins

@@ -43,3 +43,6 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = set_python_format_keybind,
 })
 
+-- vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
+
+-- vim.o.winbar = "%=%m %f %{%v:lua.require'nvim-navic'.get_location()%}"
