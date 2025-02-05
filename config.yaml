@@ -32,3 +32,9 @@ profiles:
     - d_lua
     - f_init.lua
     - f_tmux.conf
+  NR200P:
+    dotfiles:
+    - f_zshrc
+    - d_lua
+    - f_init.lua
+    - f_tmux.conf
