@@ -5,3 +5,7 @@
 `dotdrop install --dry`
 `dotdrop install`
 `dotdrop update`
+
+
+custom screenshot shortcut:
+`/usr/bin/spectacle -r -c -b`

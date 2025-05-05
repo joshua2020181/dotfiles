@@ -38,3 +38,10 @@ profiles:
     - d_lua
     - f_init.lua
     - f_tmux.conf
+  joshua-Precision-5690:
+    dotfiles:
+    - f_zshrc
+    - d_lua
+    - f_init.lua
+    - f_tmux.conf
+    
