@@ -1,0 +1,213 @@
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+# Path to your oh-my-zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
+
+# Set name of the theme to load --- if set to "random", it will
+# load a random theme each time oh-my-zsh is loaded, in which case,
+# to know which specific one was loaded, run: echo $RANDOM_THEME
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+ZSH_THEME="robbyrussell"
+
+# Set list of themes to pick from when loading at random
+# Setting this variable when ZSH_THEME=random will cause zsh to load
+# a theme from this variable instead of looking in $ZSH/themes/
+# If set to an empty array, this variable will have no effect.
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+
+# Uncomment the following line to use hyphen-insensitive completion.
+# Case-sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
+
+# Uncomment one of the following lines to change the auto-update behavior
+# zstyle ':omz:update' mode disabled  # disable automatic updates
+# zstyle ':omz:update' mode auto      # update automatically without asking
+# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+
+# Uncomment the following line to change how often to auto-update (in days).
+# zstyle ':omz:update' frequency 13
+
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS="true"
+
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+# You can also set it to another string to have that shown instead of the default red dots.
+# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
+# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
+# COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details.
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
+# Which plugins would you like to load?
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(
+  git
+  zsh-syntax-highlighting
+  zsh-autosuggestions
+  zsh-you-should-use
+)
+
+source $ZSH/oh-my-zsh.sh
+
+# User configuration
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
+
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
+
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+#
+export XDG_CONFIG_HOME="$HOME/.config"
+
+alias python="python3"
+
+
+# MY MODIFICATIONS
+if [ $DISPLAY ]; then
+  setxkbmap -option ctrl:nocaps
+  xcape -e 'Control_L=Escape'
+fi
+
+export PATH="$PATH:$HOME/.local/bin/"
+
+export PATH="$PATH:/opt/nvim-linux64/bin"
+
+export EDITOR="nvim"
+export PATH="$PATH:$HOME/kiwi/kiwi_toolkit/"
+export PATH="$PATH:$HOME/s/"
+
+source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# Bind Alt + Enter to accept zsh-autosuggestions
+bindkey '\e\r' autosuggest-accept
+
+# python stuff
+alias nbrc="nano ~/.bashrc"
+alias sbrc="source ~/.bashrc"
+alias nvzrc="nvim ~/.zshrc"
+alias szrc="source ~/.zshrc"
+alias tmux="tmux -f ~/.config/tmux/tmux.conf"
+
+
+alias dlf="docker logs -f"
+function dx() {
+  docker exec -it "$1" bash
+}
+alias drm="docker rm -f"
+
+alias gs="git status"
+alias ga="git add"
+alias gc="git commit"
+alias gp="git push"
+alias gpl="git pull"
+alias gco="git checkout"
+alias gcob="git checkout -b"
+alias gcm="git commit -m"
+alias gitb="git branch"
+alias gita="git add"
+alias gd="git diff"
+alias gits="git diff && git status"
+alias gitc="git checkout"
+alias gcm="git checkout master && git pull"
+alias gpp="git pull && git push"
+alias ggraph="git log --graph --oneline --decorate --all"
+alias glog="git log --oneline --decorate"
+alias gls="git log --oneline --decorate --stat"
+alias gdiff="git diff"
+alias gcam="git commit -am"
+alias gpf="git push --force-with-lease"
+
+alias kill-gazebo="pkill -f gazebo; pkill -f gzserver; pkill -f gzclient"
+
+alias dps="docker ps"
+
+alias adm="arc diff master"
+
+alias sshrm="ssh-keygen -f /home/joshua/.ssh/known_hosts -R "
+
+unalias gl 2> /dev/null
+gl() {
+  git pull
+  if [[ -n $(git status --porcelain) ]]; then
+    echo "Uncommitted changes!"
+    echo $(git status --porcelain)
+  fi
+}
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# source /opt/ros/noetic/setup.zsh || true
+
+source $HOME/.cargo/env || true
+
+alias dotdrop="/home/joshua/dotfiles/dotdrop.sh --cfg=/home/joshua/dotfiles/config.yaml"
+
+eval "$(zoxide init --cmd cd zsh)"
+
+alias svenv="source ~/kiwi/venv/kiwi/bin/activate"
+alias kiwi="cd ~/kiwi && svenv"
+alias nvkiwi="cd ~/kiwi && svenv && nvim"
+
+# ssh-add ~/.ssh/personal_id_ed25519
+alias export_px4_home="export PX4_HOME_ALT=0 && export PX4_HOME_LON=-71.51873173774923 && export PX4_HOME_LAT=42.462421357750316"
+alias hitl="source ~/kiwi/venv/kiwi/bin/activate && export_px4_home && ~/kiwi/offline_utils/run_gazebo.sh"
+alias guardian_app="DOCKER_HOST=\"\" docker start guardian_guardian_app_1"
+
+make_px4_sitl() {
+  local target="${1:-gazebo_iris_irlock__baylands}"
+  cd ~/px4
+  source .venv/bin/activate
+  sudo mv /usr/local/bin/protoc /usr/local/bin/protoc-tmp
+  DONT_RUN=1 make px4_sitl "$target"
+  sudo mv /usr/local/bin/protoc-tmp /usr/local/bin/protoc
+}
+
+eval $(thefuck --alias)
+

@@ -1,5 +1,8 @@
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y tmux neovim python3 python3-pip curl wget
+sudo apt install -y --no-install-recommends \
+  git python3 python3-pip curl wget \
+  tmux \
+
 
 git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
 
