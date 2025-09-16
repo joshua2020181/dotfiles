@@ -17,8 +17,13 @@ vim.o.linebreak = true
 
 vim.g.autoformat = false  -- disable autoformat by default
 
+-- maybe fix copilot crashing for big suggestions
+vim.opt.maxmempattern = 2000000  -- Increase pattern memory
+vim.opt.redrawtime = 10000       -- Increase redraw timeout
+
 vim.diagnostic.config({
   virtual_text = {
     source = true,
   },
 })
+vim.g.lazyvim_colorscheme = "catppuccin"

@@ -123,4 +123,8 @@ pip3 install thefuck --user
 pip3 install pylint black isort clang-format --user
 sudo apt install -y clangd clang-tidy
 
+# install bufls language server (#TODO: need to install go first)
+go install github.com/bufbuild/buf/cmd/buf@latest
+go install github.com/bufbuild/buf-language-server/cmd/bufls@latest
+
 echo "[✓] Custom tools setup complete. Open a new shell to pick up font+zsh changes."
