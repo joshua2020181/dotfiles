@@ -1,5 +1,5 @@
 # dotlab/Dockerfile
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -12,8 +12,8 @@ ARG DISPLAY
 ENV DISPLAY=${DISPLAY:-:0}
 
 ARG USER=joshua
-ARG UID=1000
-ARG GID=1000
+ARG UID=1001
+ARG GID=1001
 RUN groupadd -g ${GID} ${USER} && \
     useradd -m -u ${UID} -g ${GID} -s /bin/bash ${USER} && \
     usermod -aG sudo ${USER} && \

@@ -25,7 +25,7 @@ fi
 # 2. Neovim via AppImage + NvChad
 if [[ ! -f "/usr/local/bin/nvim" ]]; then
   echo "[+] Installing Neovim AppImage..."
-  wget -qO nvim.appimage https://github.com/neovim/neovim/releases/download/v0.11.1/nvim-linux-x86_64.appimage
+  wget -qO nvim.appimage https://github.com/neovim/neovim/releases/download/v0.11.4/nvim-linux-x86_64.appimage
   chmod u+x nvim.appimage
   sudo mv nvim.appimage /usr/local/bin/nvim
   sudo add-apt-repository -y universe
@@ -117,14 +117,24 @@ else
   echo "[✓] Rust already installed."
 fi
 
-pip3 install thefuck --user
+sudo apt install -y pipx
+pipx ensurepath
+# sudo pipx ensurepath --global
+
+pipx install thefuck
 
 # linters/formatters
-pip3 install pylint black isort clang-format --user
+pipx install pylint black isort clang-format
 sudo apt install -y clangd clang-tidy
 
+sudo apt update && sudo apt install curl -y
+export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}')
+curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo $VERSION_CODENAME)_all.deb" # If using Ubuntu derivates use $UBUNTU_CODENAME
+sudo dpkg -i /tmp/ros2-apt-source.deb
+sudo apt update && sudo apt install -y ros-dev-tools ros-jazzy-ros-base
+
 # install bufls language server (#TODO: need to install go first)
-go install github.com/bufbuild/buf/cmd/buf@latest
-go install github.com/bufbuild/buf-language-server/cmd/bufls@latest
+# go install github.com/bufbuild/buf/cmd/buf@latest
+# go install github.com/bufbuild/buf-language-server/cmd/bufls@latest
 
 echo "[✓] Custom tools setup complete. Open a new shell to pick up font+zsh changes."

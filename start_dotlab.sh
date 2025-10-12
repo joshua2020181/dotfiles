@@ -24,12 +24,13 @@ else
     --name "$CONTAINER_NAME" \
     -v "$HOME/dotfiles:/home/joshua/dotfiles" \
     -v "$HOME/havocos:/home/joshua/havocos" \
-    -v "/opt/ros:/opt/ros" \
     -v "/usr/include:/usr/include" \
     -v "/havoc:/havoc" \
     "$IMAGE_TAG" \
     tail -f /dev/null
 fi
+
+echo "Run 'cd dotfiles && stow nvim && stow tmux' to setup configs."
 
 # Exec into it
 echo "[+] Attaching to '$CONTAINER_NAME'..."
