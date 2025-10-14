@@ -21,6 +21,7 @@ COMMON_PACKAGES=(
   xsel
   xclip
   fd-find
+  tree
 )
 
 install_packages() {

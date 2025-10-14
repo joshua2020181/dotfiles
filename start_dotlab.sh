@@ -10,15 +10,14 @@ set -euo pipefail
 IMAGE_TAG="dotlab"
 CONTAINER_NAME="dotlab"
 
-# Build the image
-echo "[+] Building image '$IMAGE_TAG'..."
-docker build -t "$IMAGE_TAG" .
-
 # If container exists, leave it; otherwise create it
 if docker ps -a --format '{{.Names}}' | grep -qx "$CONTAINER_NAME"; then
   echo "[+] Container '$CONTAINER_NAME' already exists. Starting if stopped..."
   docker start "$CONTAINER_NAME" || true
 else
+  # Build the image
+  echo "[+] Building image '$IMAGE_TAG'..."
+  docker build -t "$IMAGE_TAG" .
   echo "[+] Creating and starting container '$CONTAINER_NAME'..."
   docker run -d \
     --name "$CONTAINER_NAME" \
