@@ -19,12 +19,12 @@ ZSH_THEME="robbyrussell"
 # much, much faster.
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-plugins=(
-  git
-  zsh-syntax-highlighting
-  zsh-autosuggestions
-  you-should-use
-)
+plugins=(git)
+_ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+[[ -d "$_ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]] && plugins+=(zsh-syntax-highlighting)
+[[ -d "$_ZSH_CUSTOM/plugins/zsh-autosuggestions" ]]     && plugins+=(zsh-autosuggestions)
+[[ -d "$_ZSH_CUSTOM/plugins/you-should-use" ]]          && plugins+=(you-should-use)
+unset _ZSH_CUSTOM
 
 source $ZSH/oh-my-zsh.sh
 
@@ -47,8 +47,12 @@ export COMPOSE_BAKE=true
 
 # ── Display / keyboard ────────────────────────────────────────────────────────
 if [[ -n "$DISPLAY" ]]; then
+  # Clear CapsLock state before remapping to avoid locking Ctrl
+  if command -v xset &>/dev/null && command -v xdotool &>/dev/null; then
+    xset q 2>/dev/null | grep -q 'Caps Lock:.*on' && xdotool key Caps_Lock
+  fi
   command -v setxkbmap &>/dev/null && setxkbmap -option ctrl:nocaps
-  command -v xcape     &>/dev/null && xcape -e 'Control_L=Escape'
+  command -v xcape &>/dev/null && { pkill xcape; xcape -e 'Control_L=Escape'; }
 fi
 
 # ── zsh-autosuggestions ───────────────────────────────────────────────────────
@@ -102,16 +106,78 @@ gl() {
 
 # ── Docker ────────────────────────────────────────────────────────────────────
 alias dps="docker ps"
-alias dlf="docker logs -f"
+unalias dlf 2>/dev/null
+dlf() {
+  if [[ $# -eq 0 ]]; then
+    echo "Usage: dlf <container_name_pattern> [docker logs flags]"
+    docker ps --format "table {{.Names}}\t{{.Status}}"
+    return 1
+  fi
+
+  local pattern="$1"; shift
+
+  local exact_match=$(docker ps -a --format "{{.Names}}" | grep -x "$pattern")
+  if [[ -n "$exact_match" ]]; then
+    docker logs -f "$exact_match" "$@"
+    return 0
+  fi
+
+  local -a containers=($(docker ps -a --format "{{.Names}}" | grep -E "$pattern"))
+  if [[ ${#containers[@]} -eq 0 ]]; then
+    echo "No containers match: $pattern"
+    return 1
+  elif [[ ${#containers[@]} -eq 1 ]]; then
+    docker logs -f "${containers[1]}" "$@"
+  else
+    echo "Select container:"
+    select container in "${containers[@]}"; do
+      if [[ -n "$container" ]]; then
+        docker logs -f "$container" "$@"
+        break
+      fi
+    done
+  fi
+}
 alias drm="docker rm -f"
 alias dsa="docker stop \$(docker ps -q)"
 alias dsra="docker rm -f \$(docker ps -aq)"
 
 alias dcf="docker compose -f"
 alias dcl="docker compose -f docker-compose.local.yml"
-dcfd() { docker compose -f "$1" down "${@:2}"; }
-dcfu() { docker compose -f "$1" up -d "${@:2}"; }
-dcfdu() { docker compose -f "$1" down "${@:2}" && docker compose -f "$1" up -d "${@:2}"; }
+dcfd() {
+  local compose_file="$1"; shift
+  local no_cloud=0; local -a args=()
+  for arg in "$@"; do [[ "$arg" == "--no-cloud" ]] && no_cloud=1 || args+=("$arg"); done
+  if (( no_cloud )); then
+    local -a svcs=($(docker compose -f "$compose_file" config --services 2>/dev/null | grep -vxE 'mqtt|backend|frontend'))
+    docker compose -f "$compose_file" down "${args[@]}" "${svcs[@]}"
+  else
+    docker compose -f "$compose_file" down "${args[@]}"
+  fi
+}
+dcfu() {
+  local compose_file="$1"; shift
+  local no_cloud=0; local -a args=()
+  for arg in "$@"; do [[ "$arg" == "--no-cloud" ]] && no_cloud=1 || args+=("$arg"); done
+  if (( no_cloud )); then
+    local -a svcs=($(docker compose -f "$compose_file" config --services 2>/dev/null | grep -vxE 'mqtt|backend|frontend'))
+    docker compose -f "$compose_file" up -d "${args[@]}" "${svcs[@]}"
+  else
+    docker compose -f "$compose_file" up -d "${args[@]}"
+  fi
+}
+dcfdu() {
+  local compose_file="$1"; shift
+  local no_cloud=0; local -a args=()
+  for arg in "$@"; do [[ "$arg" == "--no-cloud" ]] && no_cloud=1 || args+=("$arg"); done
+  if (( no_cloud )); then
+    local -a svcs=($(docker compose -f "$compose_file" config --services 2>/dev/null | grep -vxE 'mqtt|backend|frontend'))
+    docker compose -f "$compose_file" down "${args[@]}" "${svcs[@]}" && \
+    docker compose -f "$compose_file" up -d "${args[@]}" "${svcs[@]}"
+  else
+    docker compose -f "$compose_file" down "${args[@]}" && docker compose -f "$compose_file" up -d "${args[@]}"
+  fi
+}
 
 dx() {
   if [[ $# -eq 0 ]]; then
@@ -151,6 +217,30 @@ _dx_completion() {
 }
 compdef _dx_completion dx
 
+builder() {
+  if [[ -z "$(docker ps --filter name=^builder$ --filter status=running -q)" ]]; then
+    echo "Starting builder container..."
+    docker compose -f ~/havocos/my_scripts/docker-compose.yaml up -d || return 1
+  fi
+
+  if [[ "$1" == "--build" ]]; then
+    if [[ "$2" == "--nproc" ]]; then
+      echo "Using $3 parallel jobs for build"
+      docker exec -it -e HAVOCOS_COLCON_NPROC=$3 builder /havoc/workspace/services/autonomy/scripts/build.sh
+    else
+      docker exec -it builder /havoc/workspace/services/autonomy/scripts/build.sh
+    fi
+  elif [[ "$1" == "--lint" ]]; then
+    docker exec -it builder /havoc/workspace/services/autonomy/scripts/lint.sh --fix && \
+      sudo chown -R "$USER:$USER" ~/havocos
+  elif [[ "$1" == "--gen-protobufs" ]]; then
+    docker exec -it builder /havoc/workspace/scripts/dev_gen_protobufs.sh && \
+      sudo chown -R "$USER:$USER" ~/havocos
+  else
+    docker exec -it builder bash
+  fi
+}
+
 # ── SSH helpers ───────────────────────────────────────────────────────────────
 sshp() {
   local host="$1"
@@ -163,8 +253,30 @@ sshp() {
   sshpass -p "$password" ssh \
     -o StrictHostKeyChecking=no \
     -o UserKnownHostsFile=/dev/null \
-    root@"$host"
+    root@"$host" "${@:2}"
 }
+
+scpp() {
+  local password
+  for arg in "$@"; do
+    if [[ "$arg" == *acme* ]]; then
+      password="$ACME_SSH_PASSWORD"
+      break
+    elif [[ "$arg" == *:* ]]; then
+      password="$HAVOC_SSH_PASSWORD"
+      break
+    fi
+  done
+  sshpass -p "$password" scp \
+    -o StrictHostKeyChecking=no \
+    -o UserKnownHostsFile=/dev/null \
+    "$@"
+}
+
+# # TODO: guard if go installed
+# git config --global url."git@github.com:".insteadOf "https://github.com/"
+# go env -w GOPRIVATE=github.com/HavocAI/*
+# go env -w GONOSUMDB=github.com/HavocAI/*
 
 # ── Tool sources (guarded) ────────────────────────────────────────────────────
 [[ -f "$HOME/.env" ]]                               && source "$HOME/.env"
@@ -184,3 +296,12 @@ command -v thefuck &>/dev/null && eval "$(thefuck --alias)"
 export NVM_DIR="$HOME/.config/nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]]          && source "$NVM_DIR/nvm.sh"
 [[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
+
+# bun completions
+[ -s "/home/joshua/.bun/_bun" ] && source "/home/joshua/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+alias claude-mem='/home/joshua/.bun/bin/bun "/home/joshua/.claude/plugins/cache/thedotmack/claude-mem/12.1.0/scripts/worker-service.cjs"'

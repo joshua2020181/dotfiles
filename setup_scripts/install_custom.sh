@@ -50,7 +50,16 @@ else
   echo "[✓] zoxide present."
 fi
 
-# 5. Additional cli tools: tldr, xsel
+# 5. fzf
+if [[ ! -d "$HOME/.fzf" ]]; then
+  echo "[+] Installing fzf..."
+  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  ~/.fzf/install --no-update-rc
+else
+  echo "[✓] fzf already installed."
+fi
+
+# 6. Additional cli tools: tldr, xsel
 echo "[+] Installing extra CLI utils: xsel..."
 sudo apt-get install -y xsel
 

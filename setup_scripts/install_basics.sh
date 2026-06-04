@@ -13,7 +13,6 @@ COMMON_PACKAGES=(
   python3
   python3-pip
   ripgrep
-  fzf
   unzip
   zsh
   software-properties-common
