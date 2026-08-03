@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# tmux-launch [/path/to/folder] [session-name]
+# Layout:
+#   +----------------------+--------+
+#   |                      |        |
+#   |   main 80% x 80%     | 20% w  |
+#   |                      | 80% h  |
+#   +----------------------+--------+
+#   |        bottom 20% h           |
+#   +-------------------------------+
+set -euo pipefail
+
+dir="${1:-$PWD}"
+dir="$(cd "$dir" && pwd)"            # absolute, validates exists
+name="${2:-$(basename "$dir")}"
+name="${name//[.:]/_}"               # tmux dislikes . and : in names
+
+if tmux has-session -t "=$name" 2>/dev/null; then
+  exec tmux attach -t "=$name"
+fi
+
+# main pane (full), cwd = dir
+tmux new-session -d -s "$name" -c "$dir"
+
+# carve bottom 20% (full width) -> pane below
+tmux split-window -v -l 20% -c "$dir" -t "$name"
+
+# back to top pane, carve right 20% -> the two top panes are 80% tall
+tmux select-pane -t "$name".0
+tmux split-window -h -l 20% -c "$dir" -t "$name"
+
+tmux select-pane -t "$name".0        # focus main
+exec tmux attach -t "$name"

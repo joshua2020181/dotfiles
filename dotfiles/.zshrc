@@ -36,7 +36,7 @@ export PATH="$PATH:$HOME/.local/bin"
 [[ -d /opt/nvim-linux64/bin ]]    && export PATH="$PATH:/opt/nvim-linux64/bin"
 [[ -d $HOME/kiwi/kiwi_toolkit ]]  && export PATH="$PATH:$HOME/kiwi/kiwi_toolkit"
 [[ -d $HOME/s ]]                  && export PATH="$PATH:$HOME/s"
-[[ -d $HOME/balena-cli ]]         && export PATH="$PATH:$HOME/balena-cli"
+[[ -d $HOME/balena-cli ]]         && export PATH="$PATH:$HOME/balena-cli/bin"
 [[ -d /usr/local/go/bin ]]        && export PATH="$PATH:/usr/local/go/bin"
 command -v go &>/dev/null         && export PATH="$PATH:$(go env GOPATH)/bin"
 
@@ -217,29 +217,9 @@ _dx_completion() {
 }
 compdef _dx_completion dx
 
-builder() {
-  if [[ -z "$(docker ps --filter name=^builder$ --filter status=running -q)" ]]; then
-    echo "Starting builder container..."
-    docker compose -f ~/havocos/my_scripts/docker-compose.yaml up -d || return 1
-  fi
-
-  if [[ "$1" == "--build" ]]; then
-    if [[ "$2" == "--nproc" ]]; then
-      echo "Using $3 parallel jobs for build"
-      docker exec -it -e HAVOCOS_COLCON_NPROC=$3 builder /havoc/workspace/services/autonomy/scripts/build.sh
-    else
-      docker exec -it builder /havoc/workspace/services/autonomy/scripts/build.sh
-    fi
-  elif [[ "$1" == "--lint" ]]; then
-    docker exec -it builder /havoc/workspace/services/autonomy/scripts/lint.sh --fix && \
-      sudo chown -R "$USER:$USER" ~/havocos
-  elif [[ "$1" == "--gen-protobufs" ]]; then
-    docker exec -it builder /havoc/workspace/scripts/dev_gen_protobufs.sh && \
-      sudo chown -R "$USER:$USER" ~/havocos
-  else
-    docker exec -it builder bash
-  fi
-}
+# `builder` is now a per-worktree wrapper script at ~/.local/bin/builder
+# (multi-worktree aware + shared ccache). Legacy flags --build/--lint/--gen-protobufs
+# still work. See `builder help`. Old inline function removed 2026-07-08.
 
 # ── SSH helpers ───────────────────────────────────────────────────────────────
 sshp() {
@@ -289,7 +269,6 @@ scpp() {
 # Show machine name in right-side prompt if set in ~/.env.local
 [[ -n "$MACHINE_NAME" ]] && export RPROMPT="%F{242}$MACHINE_NAME%f"
 
-command -v zoxide  &>/dev/null && eval "$(zoxide init --cmd cd zsh)"
 command -v thefuck &>/dev/null && eval "$(thefuck --alias)"
 
 # nvm
@@ -305,3 +284,7 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 alias claude-mem='/home/joshua/.bun/bin/bun "/home/joshua/.claude/plugins/cache/thedotmack/claude-mem/12.1.0/scripts/worker-service.cjs"'
+
+# zoxide — init LAST so its `cd` wrapper isn't clobbered by nvm's chpwd hook
+command -v zoxide &>/dev/null && eval "$(zoxide init --cmd cd zsh)"
+export _ZO_DOCTOR=0  # prevent zoxide from complaining
