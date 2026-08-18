@@ -71,7 +71,7 @@ alias szrc="source ~/.zshrc"
 alias tmux="tmux -f ~/.config/tmux/tmux.conf"
 alias sshrm="ssh-keygen -f $HOME/.ssh/known_hosts -R"
 alias dotdrop="$HOME/dotfiles/dotdrop.sh --cfg=$HOME/dotfiles/config.yaml"
-alias ec2="$HOME/havocos/my_scripts/ec2.sh"
+alias ec2="ec2.sh"
 
 # ── Git ───────────────────────────────────────────────────────────────────────
 alias gs="git status"

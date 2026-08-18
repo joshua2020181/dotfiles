@@ -1,0 +1,25 @@
+[Unit]
+Description=Local TODO.md dashboard
+Documentation=file:%h/dotfiles/personal_assistant/README.md
+After=graphical-session.target
+
+[Service]
+Type=simple
+# A user unit gets a minimal PATH; the claude CLI lives in ~/.local/bin and the
+# chat + resync features shell out to it.
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+# Unbuffered, or the startup banner (including the write token) never reaches journalctl.
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/bin/python3 %h/dotfiles/personal_assistant/serve.py --port 8788
+Restart=on-failure
+RestartSec=5
+# Loopback-only listener that rewrites one file; keep it boxed in.
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/dotfiles/personal_assistant
+NoNewPrivileges=yes
+RestrictAddressFamilies=AF_INET AF_UNIX
+
+[Install]
+WantedBy=default.target

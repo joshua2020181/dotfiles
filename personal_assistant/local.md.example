@@ -1,0 +1,55 @@
+# Local bindings
+
+Gitignored. Copy this file to `local.md` and fill in your own values — `CLAUDE.md`,
+`references/sources.md`, and the skills read `local.md` for identity and source constants
+instead of hardcoding them, so this repo can stay public with none of it exposed.
+
+## Identity
+
+| | |
+|---|---|
+| Name | |
+| Title | |
+| Home base | city/region — the assistant still detects the actual zone per-run, this is just the default |
+| Email | |
+
+## Jira
+
+| | |
+|---|---|
+| Site | `https://<your-instance>.atlassian.net` |
+| Cloud id | |
+| Account id | |
+
+Active projects, by volume:
+
+| Key | Name | Notes |
+|---|---|---|
+| | | primary day-to-day work |
+| | | inbound bugs / triage |
+| | | program-level epics |
+| | | occasional |
+
+Projects with no Jira presence, tracked only in `TODO.md` via a `#slug` tag:
+
+| Slug | Project | Notes |
+|---|---|---|
+| | | |
+
+## GitHub
+
+| | |
+|---|---|
+| Login | |
+| Org | |
+
+Repos you work in: `<org>/<primary-repo>`, `<org>/<repo-2>`, `<org>/<repo-3>`. Plus any
+personal repos outside the org.
+
+## Slack
+
+| | |
+|---|---|
+| Workspace | `<workspace>.slack.com` |
+| User id | `U...........` |
+| Self-DM channel id | `D...........` (your own DM — useful as a scratchpad, useless as a notification channel, see `CLAUDE.md`) |

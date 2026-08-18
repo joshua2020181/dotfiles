@@ -1,0 +1,10 @@
+.todo-backups/
+TODO.md.tmp
+__pycache__/
+
+# Real data and identity — never publish these
+local.md
+/TODO.md
+/state.json
+/log/
+/dashboard.html
